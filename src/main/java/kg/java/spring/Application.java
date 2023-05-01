@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperti
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-@Theme(value = "springvaadin")
 public class Application implements AppShellConfigurator {
 
     public static void main(String[] args) {
