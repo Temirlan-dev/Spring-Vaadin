@@ -1,4 +1,4 @@
-package kg.java.spring.security;
+package kg.java.spring.core.config;
 
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import kg.java.spring.views.login.LoginView;

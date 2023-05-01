@@ -34,20 +34,13 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Whitespace;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 import java.io.ByteArrayInputStream;
 import java.util.Optional;
-import kg.java.spring.data.entity.User;
-import kg.java.spring.security.AuthenticatedUser;
+import kg.java.spring.core.model.entity.User;
+import kg.java.spring.core.config.AuthenticatedUser;
 import kg.java.spring.views.about.AboutView;
 import kg.java.spring.views.helloworld.HelloWorldView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
-/**
- * The main view is a top-level placeholder for other views.
- */
 public class MainLayout extends AppLayout {
-
-    /**
-     * A simple navigation item component, based on ListItem element.
-     */
     public static class MenuItemInfo extends ListItem {
 
         private final Class<? extends Component> view;

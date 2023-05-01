@@ -1,9 +1,9 @@
-package kg.java.spring.security;
+package kg.java.spring.core.config;
 
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import java.util.Optional;
-import kg.java.spring.data.entity.User;
-import kg.java.spring.data.service.UserRepository;
+import kg.java.spring.core.model.entity.User;
+import kg.java.spring.core.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 

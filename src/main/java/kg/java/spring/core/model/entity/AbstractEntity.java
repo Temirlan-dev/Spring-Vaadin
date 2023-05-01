@@ -1,4 +1,4 @@
-package kg.java.spring.data.entity;
+package kg.java.spring.core.model.entity;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

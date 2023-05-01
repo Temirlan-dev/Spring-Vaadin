@@ -1,6 +1,6 @@
-package kg.java.spring.data.service;
+package kg.java.spring.core.repository;
 
-import kg.java.spring.data.entity.User;
+import kg.java.spring.core.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

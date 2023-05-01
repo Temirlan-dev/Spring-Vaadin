@@ -1,9 +1,9 @@
-package kg.java.spring.data.entity;
+package kg.java.spring.core.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Set;
-import kg.java.spring.data.Role;
+import kg.java.spring.core.model.enums.Role;
 
 @Entity
 @Table(name = "application_user")

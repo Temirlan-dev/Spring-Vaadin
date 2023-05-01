@@ -1,9 +1,9 @@
-package kg.java.spring.security;
+package kg.java.spring.core.config;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import kg.java.spring.data.entity.User;
-import kg.java.spring.data.service.UserRepository;
+import kg.java.spring.core.model.entity.User;
+import kg.java.spring.core.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -9,7 +9,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.internal.RouteUtil;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import kg.java.spring.security.AuthenticatedUser;
+import kg.java.spring.core.config.AuthenticatedUser;
 
 @AnonymousAllowed
 @PageTitle("Login")

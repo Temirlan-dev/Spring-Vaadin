@@ -1,7 +1,8 @@
-package kg.java.spring.data.service;
+package kg.java.spring.core.service;
 
 import java.util.Optional;
-import kg.java.spring.data.entity.User;
+import kg.java.spring.core.model.entity.User;
+import kg.java.spring.core.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
