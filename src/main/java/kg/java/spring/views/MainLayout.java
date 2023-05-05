@@ -2,7 +2,6 @@ package kg.java.spring.views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
@@ -15,7 +14,6 @@ import com.vaadin.flow.component.html.UnorderedList;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxSizing;
@@ -32,12 +30,11 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.Whitespace;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
-import java.io.ByteArrayInputStream;
 import java.util.Optional;
 import kg.java.spring.core.model.entity.User;
 import kg.java.spring.core.config.AuthenticatedUser;
 import kg.java.spring.views.about.AboutView;
-import kg.java.spring.views.helloworld.HelloWorldView;
+import kg.java.spring.views.admin.AdminView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 public class MainLayout extends AppLayout {
@@ -145,8 +142,7 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
-                new MenuItemInfo("Hello World", LineAwesomeIcon.GLOBE_SOLID.create(), HelloWorldView.class), //
-
+                new MenuItemInfo("Hello World", LineAwesomeIcon.GLOBE_SOLID.create(), AdminView.class), //
                 new MenuItemInfo("About", LineAwesomeIcon.FILE.create(), AboutView.class), //
 
         };
