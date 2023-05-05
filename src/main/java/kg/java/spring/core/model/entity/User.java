@@ -15,7 +15,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String username;
-    private String name;
     @JsonIgnore
     private String hashedPassword;
     @Enumerated(EnumType.STRING)
