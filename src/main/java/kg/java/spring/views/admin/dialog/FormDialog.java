@@ -2,19 +2,27 @@ package kg.java.spring.views.admin.dialog;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-
+import kg.java.spring.core.model.entity.SeasonCard;
+import kg.java.spring.core.service.SeasonCardService;
+import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Locale;
 
+@Slf4j
 public class FormDialog extends Dialog {
+    private final SeasonCardService seasonCardService;
+    private ComboBox<SeasonCard> seasonCardComboBox;
 
-    public FormDialog() {
+    public FormDialog(SeasonCardService seasonCardService) {
+        this.seasonCardService = seasonCardService;
         setupComponentUI();
     }
 
@@ -31,7 +39,7 @@ public class FormDialog extends Dialog {
         dialog.open();
     }
 
-    private static VerticalLayout createDialogLayout() {
+    private VerticalLayout createDialogLayout() {
         TextField firstNameField = new TextField("Фамилия");
         TextField lastNameField = new TextField("Имя");
 
@@ -47,14 +55,26 @@ public class FormDialog extends Dialog {
         DatePicker endDatePicker = new DatePicker("Выберите конец даты:");
         endDatePicker.setI18n(singleFormatI18n);
 
+        seasonCardComboBox = buildSeasonCardComboBox();
+
         VerticalLayout dialogLayout = new VerticalLayout(firstNameField,
-                lastNameField, startDatePicker, endDatePicker);
+                lastNameField, startDatePicker, endDatePicker, seasonCardComboBox);
         dialogLayout.setPadding(false);
         dialogLayout.setSpacing(false);
         dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
         dialogLayout.getStyle().set("width", "18rem").set("max-width", "100%");
 
         return dialogLayout;
+    }
+
+    private ComboBox<SeasonCard> buildSeasonCardComboBox() {
+        ComboBox<SeasonCard> comboBox = new ComboBox<>("Тип абонимента");
+        List<SeasonCard> seasonCardListDB = this.seasonCardService.getSeasonCards();
+        log.info("проверка {}", seasonCardListDB);
+
+        comboBox.setItems(seasonCardListDB);
+        comboBox.setItemLabelGenerator(SeasonCard::getName);
+        return comboBox;
     }
 
     private static Button createSaveButton(Dialog dialog) {
