@@ -3,7 +3,6 @@ package kg.java.spring.views.admin;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
@@ -11,6 +10,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import jakarta.annotation.security.RolesAllowed;
 import kg.java.spring.views.MainLayout;
+import kg.java.spring.views.admin.dialog.FormDialog;
 
 @PageTitle("Hello World")
 @Route(value = "hello", layout = MainLayout.class)
@@ -39,9 +39,9 @@ public class AdminView extends HorizontalLayout {
     }
 
     private Button buildButton() {
-        Button button = new Button("save");
+        Button button = new Button("Добавить");
         button.addClickListener(e -> {
-            Notification.show("Hello " + nameTextField.getValue());
+            new FormDialog();
         });
         button.addClickShortcut(Key.ENTER);
         button.setThemeName("primary");
