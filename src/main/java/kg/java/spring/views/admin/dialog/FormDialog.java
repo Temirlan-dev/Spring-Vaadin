@@ -42,7 +42,9 @@ public class FormDialog extends Div {
     private Grid<Customer> customerGrid;
     private TextField firstNameField;
     private TextField lastnameField;
-    Dialog dialog = new Dialog();
+    private Dialog dialog = new Dialog();
+    private DatePicker startDatePicker;
+    private DatePicker endDatePicker;
 
     public FormDialog(SeasonCardService seasonCardService,
                       CustomerService customerService,
@@ -56,8 +58,8 @@ public class FormDialog extends Div {
     }
 
     private void setupComponentUI() {
-        dialog.setHeaderTitle("Анкета клиента");
         FormLayout dialogLayout = createDialogLayout();
+        dialog.setHeaderTitle("Анкета клиента");
         dialog.add(dialogLayout);
 
         Button saveButton = createSaveButton();
@@ -71,17 +73,8 @@ public class FormDialog extends Div {
         firstNameField = buildnameTextField();
         lastnameField = buildLastnameTextField();
         seasonCardComboBox = buildSeasonCardComboBox();
-
-        Locale finnishLocale = new Locale("fi", "FI");
-
-        DatePicker startDatePicker = new DatePicker("Выберите начало даты:");
-        startDatePicker.setLocale(finnishLocale);
-        startDatePicker.setValue(LocalDate.now(ZoneId.systemDefault()));
-        DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
-        singleFormatI18n.setDateFormat("dd.MM.yyyy");
-
-        DatePicker endDatePicker = new DatePicker("Выберите конец даты:");
-        endDatePicker.setI18n(singleFormatI18n);
+        startDatePicker = buildStartDatePicker();
+        endDatePicker = buildEndDatePicker();
 
         FormLayout formLayout = new FormLayout();
         formLayout.add(firstNameField, startDatePicker, lastnameField,  endDatePicker,seasonCardComboBox);
@@ -89,6 +82,23 @@ public class FormDialog extends Div {
                 new FormLayout.ResponsiveStep("", 2));
         formLayout.setWidth("500px");
         return formLayout;
+    }
+
+    private DatePicker buildStartDatePicker() {
+        Locale finnishLocale = new Locale("fi", "FI");
+        DatePicker datePicker = new DatePicker("Выберите начало даты:");
+        datePicker.setLocale(finnishLocale);
+        datePicker.setValue(LocalDate.now(ZoneId.systemDefault()));
+        DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
+        singleFormatI18n.setDateFormat("dd.MM.yyyy");
+        return datePicker;
+    }
+
+    private DatePicker buildEndDatePicker() {
+        DatePicker datePicker = new DatePicker("Выберите конец даты:");
+        DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
+        datePicker.setI18n(singleFormatI18n.setDateFormat("dd.MM.yyyy"));
+        return datePicker;
     }
 
     private TextField buildnameTextField() {
