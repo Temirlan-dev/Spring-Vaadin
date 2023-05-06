@@ -111,7 +111,7 @@ public class MainLayout extends AppLayout {
             div.getElement().getStyle().set("align-items", "center");
             div.getElement().getStyle().set("gap", "var(--lumo-space-s)");
             userName.add(div);
-            userName.getSubMenu().addItem("Sign out", e -> {
+            userName.getSubMenu().addItem("Выйти", e -> {
                 authenticatedUser.logout();
             });
 
@@ -142,8 +142,8 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
-                new MenuItemInfo("Hello World", LineAwesomeIcon.GLOBE_SOLID.create(), AdminView.class), //
-                new MenuItemInfo("About", LineAwesomeIcon.FILE.create(), AboutView.class), //
+                new MenuItemInfo("Список клиентов", LineAwesomeIcon.GLOBE_SOLID.create(), AdminView.class), //
+                new MenuItemInfo("Ключи", LineAwesomeIcon.FILE.create(), AboutView.class), //
 
         };
     }

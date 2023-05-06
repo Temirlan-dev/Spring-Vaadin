@@ -47,7 +47,6 @@ public class AdminView extends VerticalLayout {
         Div div = new Div(horizontalLayout);
         horizontalLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
         div.setWidth("100%");
-        setMargin(true);
         add(div);
         add(customerGrid);
     }
