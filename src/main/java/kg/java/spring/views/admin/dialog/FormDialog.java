@@ -6,7 +6,9 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
@@ -24,16 +26,22 @@ import kg.java.spring.core.model.enums.ResultDB;
 import kg.java.spring.core.service.CustomerService;
 import kg.java.spring.core.service.SeasonCardService;
 import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
-public class FormDialog extends Dialog {
+public class FormDialog extends Div {
     private final SeasonCardService seasonCardService;
     private final CustomerService customerService;
     private ComboBox<SeasonCard> seasonCardComboBox;
     private final Binder<Customer> binder = new Binder<>();
     private final Customer customer = new Customer();
     private Grid<Customer> customerGrid;
+    private TextField firstNameField;
+    private TextField lastnameField;
     Dialog dialog = new Dialog();
 
     public FormDialog(SeasonCardService seasonCardService,
@@ -49,7 +57,7 @@ public class FormDialog extends Dialog {
 
     private void setupComponentUI() {
         dialog.setHeaderTitle("Анкета клиента");
-        VerticalLayout dialogLayout = createDialogLayout();
+        FormLayout dialogLayout = createDialogLayout();
         dialog.add(dialogLayout);
 
         Button saveButton = createSaveButton();
@@ -59,31 +67,28 @@ public class FormDialog extends Dialog {
         dialog.open();
     }
 
-    private VerticalLayout createDialogLayout() {
-        TextField firstNameField = buildnameTextField();
-        TextField lastnameField = buildLastnameTextField();
-
-//        Locale finnishLocale = new Locale("fi", "FI");
-//
-//        DatePicker startDatePicker = new DatePicker("Выберите начало даты:");
-//        startDatePicker.setLocale(finnishLocale);
-//        startDatePicker.setValue(LocalDate.now(ZoneId.systemDefault()));
-//
-//        DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
-//        singleFormatI18n.setDateFormat("dd.MM.yyyy");
-//
-//        DatePicker endDatePicker = new DatePicker("Выберите конец даты:");
-//        endDatePicker.setI18n(singleFormatI18n);
-
+    private FormLayout createDialogLayout() {
+        firstNameField = buildnameTextField();
+        lastnameField = buildLastnameTextField();
         seasonCardComboBox = buildSeasonCardComboBox();
 
-        VerticalLayout dialogLayout = new VerticalLayout(firstNameField,
-                lastnameField, seasonCardComboBox);
-        dialogLayout.setPadding(false);
-        dialogLayout.setSpacing(false);
-        dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
-        dialogLayout.getStyle().set("width", "18rem").set("max-width", "100%");
-        return dialogLayout;
+        Locale finnishLocale = new Locale("fi", "FI");
+
+        DatePicker startDatePicker = new DatePicker("Выберите начало даты:");
+        startDatePicker.setLocale(finnishLocale);
+        startDatePicker.setValue(LocalDate.now(ZoneId.systemDefault()));
+        DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
+        singleFormatI18n.setDateFormat("dd.MM.yyyy");
+
+        DatePicker endDatePicker = new DatePicker("Выберите конец даты:");
+        endDatePicker.setI18n(singleFormatI18n);
+
+        FormLayout formLayout = new FormLayout();
+        formLayout.add(firstNameField, startDatePicker, lastnameField,  endDatePicker,seasonCardComboBox);
+        formLayout.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("", 2));
+        formLayout.setWidth("500px");
+        return formLayout;
     }
 
     private TextField buildnameTextField() {
