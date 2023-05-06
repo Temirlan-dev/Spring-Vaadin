@@ -7,6 +7,7 @@ import kg.java.spring.core.repository.CustomerRepository;
 import kg.java.spring.core.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -24,5 +25,10 @@ public class CustomerServiceImpl implements CustomerService {
         } catch (Exception e) {
             return new ResponseDB(ResultDB.ERROR, e.getMessage());
         }
+    }
+
+    @Override
+    public List<Customer> getCustomer() {
+        return customerRepository.findAll();
     }
 }
