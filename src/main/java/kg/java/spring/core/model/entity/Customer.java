@@ -16,5 +16,4 @@ public class Customer {
     private String lastname;
     @ManyToOne
     private SeasonCard card;
-
 }
