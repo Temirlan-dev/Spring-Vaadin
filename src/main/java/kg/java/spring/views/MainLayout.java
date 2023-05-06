@@ -39,19 +39,16 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 
 public class MainLayout extends AppLayout {
     public static class MenuItemInfo extends ListItem {
-
         private final Class<? extends Component> view;
 
         public MenuItemInfo(String menuTitle, Component icon, Class<? extends Component> view) {
             this.view = view;
             RouterLink link = new RouterLink();
-            // Use Lumo classnames for various styling
             link.addClassNames(Display.FLEX, Gap.XSMALL, Height.MEDIUM, AlignItems.CENTER, Padding.Horizontal.SMALL,
                     TextColor.BODY);
             link.setRoute(view);
 
             Span text = new Span(menuTitle);
-            // Use Lumo classnames for various styling
             text.addClassNames(FontWeight.MEDIUM, FontSize.MEDIUM, Whitespace.NOWRAP);
 
             if (icon != null) {
@@ -60,7 +57,6 @@ public class MainLayout extends AppLayout {
             link.add(text);
             add(link);
         }
-
         public Class<?> getView() {
             return view;
         }
@@ -84,7 +80,7 @@ public class MainLayout extends AppLayout {
         Div layout = new Div();
         layout.addClassNames(Display.FLEX, AlignItems.CENTER, Padding.Horizontal.LARGE);
 
-        H1 appName = new H1("Spring+Vaadin");
+        H1 appName = new H1("L-center");
         appName.addClassNames(Margin.Vertical.MEDIUM, Margin.End.AUTO, FontSize.LARGE);
         layout.add(appName);
 
@@ -92,19 +88,11 @@ public class MainLayout extends AppLayout {
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
 
-//            Avatar avatar = new Avatar(user.getName());
-//            StreamResource resource = new StreamResource("profile-pic",
-//                    () -> new ByteArrayInputStream(user.getProfilePicture()));
-//            avatar.setImageResource(resource);
-//            avatar.setThemeName("xsmall");
-//            avatar.getElement().setAttribute("tabindex", "-1");
-
             MenuBar userMenu = new MenuBar();
             userMenu.setThemeName("tertiary-inline contrast");
 
             MenuItem userName = userMenu.addItem("");
             Div div = new Div();
-//            div.add(avatar);
             div.add(user.getUsername());
             div.add(new Icon("lumo", "dropdown"));
             div.getElement().getStyle().set("display", "flex");
@@ -124,7 +112,6 @@ public class MainLayout extends AppLayout {
         Nav nav = new Nav();
         nav.addClassNames(Display.FLEX, Overflow.AUTO, Padding.Horizontal.MEDIUM, Padding.Vertical.XSMALL);
 
-        // Wrap the links in a list; improves accessibility
         UnorderedList list = new UnorderedList();
         list.addClassNames(Display.FLEX, Gap.SMALL, ListStyleType.NONE, Margin.NONE, Padding.NONE);
         nav.add(list);
@@ -147,5 +134,4 @@ public class MainLayout extends AppLayout {
 
         };
     }
-
 }
