@@ -34,6 +34,7 @@ public class FormDialog extends Dialog {
     private final Binder<Customer> binder = new Binder<>();
     private final Customer customer = new Customer();
     private Grid<Customer> customerGrid;
+    Dialog dialog = new Dialog();
 
     public FormDialog(SeasonCardService seasonCardService,
                       CustomerService customerService,
@@ -47,12 +48,11 @@ public class FormDialog extends Dialog {
     }
 
     private void setupComponentUI() {
-        Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Анкета клиента");
         VerticalLayout dialogLayout = createDialogLayout();
         dialog.add(dialogLayout);
 
-        Button saveButton = createSaveButton(dialog);
+        Button saveButton = createSaveButton();
         Button cancelButton = new Button("Отмена", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(saveButton);
@@ -126,10 +126,13 @@ public class FormDialog extends Dialog {
         return comboBox;
     }
 
-    private Button createSaveButton(Dialog dialog) {
-        Button saveButton = new Button("Сохранить", e -> dialog.close());
+    private Button createSaveButton() {
+        Button saveButton = new Button("Сохранить");
+        saveButton.setEnabled(false);
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         saveButton.addClickListener(saveCustomerListener());
+        binder.addStatusChangeListener(statusChangeEvent ->
+                saveButton.setEnabled(!statusChangeEvent.hasValidationErrors()));
         return saveButton;
     }
 
@@ -142,6 +145,7 @@ public class FormDialog extends Dialog {
                 if (response.getResultDB() == ResultDB.SUCCESS) {
                     notification("Успешно", NotificationVariant.LUMO_SUCCESS);
                     refreshGrid();
+                    dialog.close();
                 } else if (response.getResultDB() == ResultDB.ERROR) {
                     notification("Ошибка", NotificationVariant.LUMO_ERROR);
                 }

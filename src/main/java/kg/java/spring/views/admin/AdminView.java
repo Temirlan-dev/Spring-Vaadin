@@ -2,8 +2,11 @@ package kg.java.spring.views.admin;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -69,12 +72,12 @@ public class AdminView extends VerticalLayout {
     }
 
     private Button buildButton() {
-        Button button = new Button("Добавить");
+        Button button = new Button(new Icon(VaadinIcon.PLUS));
         button.addClickListener(e -> {
             new FormDialog(seasonCardService, customerService, customerGrid);
         });
         button.addClickShortcut(Key.ENTER);
-        button.setThemeName("primary");
+        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         return button;
     }
 }
