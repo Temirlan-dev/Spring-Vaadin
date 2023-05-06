@@ -62,10 +62,17 @@ public class FormDialog extends Div {
         dialog.add(dialogLayout);
 
         Button saveButton = createSaveButton();
-        Button cancelButton = new Button("Отмена", e -> dialog.close());
+        Button cancelButton = createCancelButton();
+
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(saveButton);
         dialog.open();
+    }
+
+    private Button createCancelButton() {
+        Button cancelButton = new Button("Отмена", e -> dialog.close());
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        return cancelButton;
     }
 
     private FormLayout createDialogLayout() {
@@ -90,7 +97,6 @@ public class FormDialog extends Div {
         datePicker.setValue(LocalDate.now(ZoneId.systemDefault()));
         DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
         singleFormatI18n.setDateFormat("dd.MM.yyyy");
-        log.info("************* {}", datePicker.getValue());
         customer.setStartDate(datePicker.getValue());
         return datePicker;
     }
@@ -99,10 +105,10 @@ public class FormDialog extends Div {
         DatePicker datePicker = new DatePicker("Выберите конец даты:");
         DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
         datePicker.setI18n(singleFormatI18n.setDateFormat("dd.MM.yyyy"));
+
         binder.forField(datePicker)
                 .asRequired("Выберите дату")
                 .bind(Customer::getEndDate, Customer::setEndDate);
-
         return datePicker;
     }
 
