@@ -11,6 +11,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import jakarta.annotation.security.RolesAllowed;
 import kg.java.spring.core.model.entity.SeasonCard;
+import kg.java.spring.core.service.CustomerService;
 import kg.java.spring.core.service.SeasonCardService;
 import kg.java.spring.views.MainLayout;
 import kg.java.spring.views.admin.dialog.FormDialog;
@@ -22,11 +23,13 @@ import java.util.List;
 @RolesAllowed("ADMIN")
 public class AdminView extends HorizontalLayout {
     private SeasonCardService seasonCardService;
+    private CustomerService customerService;
     private TextField nameTextField;
     private TextField surenameTextField;
 
-    public AdminView(SeasonCardService seasonCardService) {
+    public AdminView(SeasonCardService seasonCardService, CustomerService customerService) {
         this.seasonCardService = seasonCardService;
+        this.customerService = customerService;
         setupComponentUI();
     }
 
@@ -47,7 +50,7 @@ public class AdminView extends HorizontalLayout {
     private Button buildButton() {
         Button button = new Button("Добавить");
         button.addClickListener(e -> {
-            new FormDialog(seasonCardService);
+            new FormDialog(seasonCardService, customerService);
         });
         button.addClickShortcut(Key.ENTER);
         button.setThemeName("primary");
