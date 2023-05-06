@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -32,10 +33,14 @@ public class FormDialog extends Dialog {
     private ComboBox<SeasonCard> seasonCardComboBox;
     private final Binder<Customer> binder = new Binder<>();
     private final Customer customer = new Customer();
+    private Grid<Customer> customerGrid;
 
-    public FormDialog(SeasonCardService seasonCardService, CustomerService customerService) {
+    public FormDialog(SeasonCardService seasonCardService,
+                      CustomerService customerService,
+                      Grid<Customer> customerGrid) {
         this.seasonCardService = seasonCardService;
         this.customerService = customerService;
+        this.customerGrid = customerGrid;
         binder.readBean(customer);
         setupComponentUI();
         binder.readBean(new Customer());
@@ -55,7 +60,7 @@ public class FormDialog extends Dialog {
     }
 
     private VerticalLayout createDialogLayout() {
-        TextField firstNameField = buildNameTextField();
+        TextField firstNameField = buildnameTextField();
         TextField lastnameField = buildLastnameTextField();
 
 //        Locale finnishLocale = new Locale("fi", "FI");
@@ -81,19 +86,29 @@ public class FormDialog extends Dialog {
         return dialogLayout;
     }
 
-    private TextField buildLastnameTextField() {
+    private TextField buildnameTextField() {
         TextField nameTextField = new TextField("Имя");
         binder.forField(nameTextField)
                 .asRequired("Введите имя")
                 .bind(Customer::getName, Customer::setName);
+
+        nameTextField.setRequiredIndicatorVisible(true);
+        nameTextField.setAllowedCharPattern("[A-Za-zа-яёА-ЯЁ]+");
+        nameTextField.setMinLength(3);
+        nameTextField.setMaxLength(15);
         return nameTextField;
     }
 
-    private TextField buildNameTextField() {
+    private TextField buildLastnameTextField() {
         TextField lastnameTextField = new TextField("Фамилия");
         binder.forField(lastnameTextField)
                 .asRequired("Введите фамилию")
                 .bind(Customer::getLastname, Customer::setLastname);
+
+        lastnameTextField.setRequiredIndicatorVisible(true);
+        lastnameTextField.setAllowedCharPattern("[A-Za-zа-яёА-ЯЁ]+");
+        lastnameTextField.setMinLength(3);
+        lastnameTextField.setMaxLength(25);
         return lastnameTextField;
     }
 
@@ -126,6 +141,7 @@ public class FormDialog extends Dialog {
                 ResponseDB response = customerService.save(customer);
                 if (response.getResultDB() == ResultDB.SUCCESS) {
                     notification("Успешно", NotificationVariant.LUMO_SUCCESS);
+                    refreshGrid();
                 } else if (response.getResultDB() == ResultDB.ERROR) {
                     notification("Ошибка", NotificationVariant.LUMO_ERROR);
                 }
@@ -145,5 +161,9 @@ public class FormDialog extends Dialog {
         notification.addThemeVariants(notificationVariant);
         notification.setPosition(Notification.Position.TOP_CENTER);
         notification.open();
+    }
+
+    private void refreshGrid() {
+        customerGrid.setItems(customerService.getCustomer());
     }
 }
