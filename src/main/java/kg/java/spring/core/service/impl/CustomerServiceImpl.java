@@ -20,6 +20,8 @@ public class CustomerServiceImpl implements CustomerService {
                     .name(customer.getName())
                     .lastname(customer.getLastname())
                     .card(customer.getCard())
+                    .startDate(customer.getStartDate())
+                    .endDate(customer.getEndDate())
                     .build());
             return new ResponseDB(ResultDB.SUCCESS, "Успешно");
         } catch (Exception e) {

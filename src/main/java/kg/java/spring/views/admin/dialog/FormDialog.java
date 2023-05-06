@@ -15,10 +15,10 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.data.converter.LocalDateToDateConverter;
 import kg.java.spring.core.model.ResponseDB;
 import kg.java.spring.core.model.entity.Customer;
 import kg.java.spring.core.model.entity.SeasonCard;
@@ -26,7 +26,6 @@ import kg.java.spring.core.model.enums.ResultDB;
 import kg.java.spring.core.service.CustomerService;
 import kg.java.spring.core.service.SeasonCardService;
 import lombok.extern.slf4j.Slf4j;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -70,7 +69,7 @@ public class FormDialog extends Div {
     }
 
     private FormLayout createDialogLayout() {
-        firstNameField = buildnameTextField();
+        firstNameField = buildNameTextField();
         lastnameField = buildLastnameTextField();
         seasonCardComboBox = buildSeasonCardComboBox();
         startDatePicker = buildStartDatePicker();
@@ -91,6 +90,8 @@ public class FormDialog extends Div {
         datePicker.setValue(LocalDate.now(ZoneId.systemDefault()));
         DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
         singleFormatI18n.setDateFormat("dd.MM.yyyy");
+        log.info("************* {}", datePicker.getValue());
+        customer.setStartDate(datePicker.getValue());
         return datePicker;
     }
 
@@ -98,11 +99,16 @@ public class FormDialog extends Div {
         DatePicker datePicker = new DatePicker("Выберите конец даты:");
         DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
         datePicker.setI18n(singleFormatI18n.setDateFormat("dd.MM.yyyy"));
+        binder.forField(datePicker)
+                .asRequired("Выберите дату")
+                .bind(Customer::getEndDate, Customer::setEndDate);
+
         return datePicker;
     }
 
-    private TextField buildnameTextField() {
+    private TextField buildNameTextField() {
         TextField nameTextField = new TextField("Имя");
+
         binder.forField(nameTextField)
                 .asRequired("Введите имя")
                 .bind(Customer::getName, Customer::setName);
@@ -116,6 +122,7 @@ public class FormDialog extends Div {
 
     private TextField buildLastnameTextField() {
         TextField lastnameTextField = new TextField("Фамилия");
+
         binder.forField(lastnameTextField)
                 .asRequired("Введите фамилию")
                 .bind(Customer::getLastname, Customer::setLastname);
@@ -132,9 +139,11 @@ public class FormDialog extends Div {
         List<SeasonCard> seasonCardListDB = this.seasonCardService.getSeasonCards();
         comboBox.setItems(seasonCardListDB);
         comboBox.setItemLabelGenerator(SeasonCard::getName);
+
         binder.forField(comboBox)
                 .asRequired("Выберите тип абонимента")
                 .bind(Customer::getCard, Customer::setCard);
+
         comboBox.addValueChangeListener(e-> {
             customer.setCard(e.getValue());
         });
@@ -146,6 +155,7 @@ public class FormDialog extends Div {
         saveButton.setEnabled(false);
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         saveButton.addClickListener(saveCustomerListener());
+
         binder.addStatusChangeListener(statusChangeEvent ->
                 saveButton.setEnabled(!statusChangeEvent.hasValidationErrors()));
         return saveButton;
@@ -155,6 +165,7 @@ public class FormDialog extends Div {
         return click -> {
             try {
                 binder.writeBean(customer);
+                customer.setEndDate(endDatePicker.getValue());
 
                 ResponseDB response = customerService.save(customer);
                 if (response.getResultDB() == ResultDB.SUCCESS) {

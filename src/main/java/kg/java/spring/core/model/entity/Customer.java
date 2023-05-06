@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +24,12 @@ public class Customer {
     private String name;
     @NotNull
     private String lastname;
+    @NotNull
+    @Column(name = "start_date")
+    private LocalDate startDate;
+    @NotNull
+    @Column(name = "end_date")
+    private LocalDate endDate;
     @NotNull
     @ManyToOne
     private SeasonCard card;

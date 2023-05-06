@@ -65,6 +65,8 @@ public class AdminView extends VerticalLayout {
         grid.addColumn(Customer::getName).setHeader("Имя");
         grid.addColumn(Customer::getLastname).setHeader("Фамилия");
         grid.addColumn(c -> c.getCard().getName()).setHeader("Абонимент");
+        grid.addColumn(Customer::getStartDate).setHeader("Начало абоним");
+        grid.addColumn(Customer::getEndDate).setHeader("Конец абоним");
 
         var customers = customerService.getCustomer();
         grid.setItems(customers);
