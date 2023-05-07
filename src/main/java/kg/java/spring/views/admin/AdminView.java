@@ -3,6 +3,7 @@ package kg.java.spring.views.admin;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
@@ -19,6 +20,7 @@ import kg.java.spring.core.service.CustomerService;
 import kg.java.spring.core.service.SeasonCardService;
 import kg.java.spring.views.MainLayout;
 import kg.java.spring.views.admin.dialog.FormDialog;
+import java.io.IOException;
 
 @PageTitle("Hello World")
 @Route(value = "hello", layout = MainLayout.class)
@@ -39,7 +41,7 @@ public class AdminView extends VerticalLayout {
         TextField nameTextField = buildTextField();
         TextField surenameTextField = buildSurnameTextField();
         customerGrid = buildCustomerGrid();
-        Button saveButton = buildButton();
+        Button saveButton = buildSaveButton();
 
         HorizontalLayout horizontalLayout = new HorizontalLayout(nameTextField, surenameTextField, saveButton);
         Div div = new Div(horizontalLayout);
@@ -57,20 +59,7 @@ public class AdminView extends VerticalLayout {
         return new TextField("Фильтр");
     }
 
-    private Grid<Customer> buildCustomerGrid() {
-        Grid<Customer> grid = new Grid<>();
-        grid.addColumn(Customer::getName).setHeader("Имя");
-        grid.addColumn(Customer::getLastname).setHeader("Фамилия");
-        grid.addColumn(c -> c.getCard().getName()).setHeader("Абонимент");
-        grid.addColumn(Customer::getStartDate).setHeader("Начало абоним");
-        grid.addColumn(Customer::getEndDate).setHeader("Конец абоним");
-
-        var customers = customerService.getCustomer();
-        grid.setItems(customers);
-        return grid;
-    }
-
-    private Button buildButton() {
+    private Button buildSaveButton() {
         Button button = new Button(new Icon(VaadinIcon.PLUS));
         button.addClickListener(e -> {
             new FormDialog(seasonCardService, customerService, customerGrid);
@@ -78,5 +67,63 @@ public class AdminView extends VerticalLayout {
         button.addClickShortcut(Key.ENTER);
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         return button;
+    }
+
+    private Grid<Customer> buildCustomerGrid() {
+        Grid<Customer> grid = new Grid<>();
+        grid.addColumn(Customer::getName).setHeader("Имя");
+        grid.addColumn(Customer::getLastname).setHeader("Фамилия");
+        grid.addColumn(c -> c.getCard().getName()).setHeader("Абонимент");
+        grid.addColumn(Customer::getStartDate).setHeader("Начало абоним");
+        grid.addColumn(Customer::getEndDate).setHeader("Конец абоним");
+        grid.addComponentColumn(item -> {
+                try {
+            return deleteFile(item);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }).setHeader("Удалить").setFlexGrow(0).setWidth("150px");
+
+        var customers = customerService.getCustomer();
+        grid.setItems(customers);
+        return grid;
+    }
+
+    private void formDialog(Customer customerItem) throws IOException {
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("Подтвердите!");
+
+        Button deleteButton = new Button("Удалить");
+        deleteButton.addClickListener(event -> {
+            customerService.delete(customerItem);
+            dialog.close();
+            refreshGrid();
+        });
+        deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        Button cancelButton = new Button("Отменить", e -> dialog.close());
+        dialog.getFooter().add(cancelButton);
+        dialog.getFooter().add(deleteButton);
+        dialog.open();
+    }
+
+    private Button deleteFile(Customer customerItem) throws IOException {
+        Button deleteButton = new Button("");
+        deleteButton.addClickListener(event -> {
+            try {
+                formDialog(customerItem);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        deleteButton.addThemeVariants(ButtonVariant.LUMO_ICON,
+                ButtonVariant.LUMO_ERROR,
+                ButtonVariant.LUMO_TERTIARY);
+        deleteButton.setIcon(new Icon(VaadinIcon.TRASH));
+        return deleteButton;
+    }
+
+    private void refreshGrid() {
+        customerGrid.setItems(customerService.getCustomer());
     }
 }

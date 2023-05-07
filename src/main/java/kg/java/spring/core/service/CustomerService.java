@@ -7,4 +7,5 @@ import java.util.List;
 public interface CustomerService {
     ResponseDB save(Customer customer);
     List<Customer> getCustomer();
+    void delete(Customer customerId);
 }
