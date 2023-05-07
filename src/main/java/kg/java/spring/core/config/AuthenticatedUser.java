@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthenticatedUser {
-
     private final UserRepository userRepository;
     private final AuthenticationContext authenticationContext;
 

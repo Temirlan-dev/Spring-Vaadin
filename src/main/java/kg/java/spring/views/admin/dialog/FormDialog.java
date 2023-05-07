@@ -175,11 +175,11 @@ public class FormDialog extends Div {
 
                 ResponseDB response = customerService.save(customer);
                 if (response.getResultDB() == ResultDB.SUCCESS) {
-                    notification("Успешно", NotificationVariant.LUMO_SUCCESS);
+                    notification("Успешно сохранен в базе!!!", NotificationVariant.LUMO_SUCCESS);
                     refreshGrid();
                     dialog.close();
                 } else if (response.getResultDB() == ResultDB.ERROR) {
-                    notification("Ошибка", NotificationVariant.LUMO_ERROR);
+                    notification("Ошибка!!!", NotificationVariant.LUMO_ERROR);
                 }
             } catch (ValidationException e) {
                 throw new RuntimeException(e);
