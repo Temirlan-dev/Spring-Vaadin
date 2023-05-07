@@ -25,10 +25,8 @@ import kg.java.spring.views.admin.dialog.FormDialog;
 @RouteAlias(value = "", layout = MainLayout.class)
 @RolesAllowed("ADMIN")
 public class AdminView extends VerticalLayout {
-    private SeasonCardService seasonCardService;
-    private CustomerService customerService;
-    private TextField nameTextField;
-    private TextField surenameTextField;
+    private final SeasonCardService seasonCardService;
+    private final CustomerService customerService;
     private Grid<Customer> customerGrid;
 
     public AdminView(SeasonCardService seasonCardService, CustomerService customerService) {
@@ -38,8 +36,8 @@ public class AdminView extends VerticalLayout {
     }
 
     private void setupComponentUI() {
-        nameTextField = buildTextField();
-        surenameTextField = buildSurnameTextField();
+        TextField nameTextField = buildTextField();
+        TextField surenameTextField = buildSurnameTextField();
         customerGrid = buildCustomerGrid();
         Button saveButton = buildButton();
 

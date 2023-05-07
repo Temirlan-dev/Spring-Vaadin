@@ -18,7 +18,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
-import com.vaadin.flow.data.converter.LocalDateToDateConverter;
 import kg.java.spring.core.model.ResponseDB;
 import kg.java.spring.core.model.entity.Customer;
 import kg.java.spring.core.model.entity.SeasonCard;
@@ -35,13 +34,10 @@ import java.util.Locale;
 public class FormDialog extends Div {
     private final SeasonCardService seasonCardService;
     private final CustomerService customerService;
-    private ComboBox<SeasonCard> seasonCardComboBox;
     private final Binder<Customer> binder = new Binder<>();
     private final Customer customer = new Customer();
-    private Grid<Customer> customerGrid;
-    private TextField firstNameField;
-    private TextField lastnameField;
-    private Dialog dialog = new Dialog();
+    private final Grid<Customer> customerGrid;
+    private final Dialog dialog = new Dialog();
     private DatePicker startDatePicker;
     private DatePicker endDatePicker;
 
@@ -76,14 +72,14 @@ public class FormDialog extends Div {
     }
 
     private FormLayout createDialogLayout() {
-        firstNameField = buildNameTextField();
-        lastnameField = buildLastnameTextField();
-        seasonCardComboBox = buildSeasonCardComboBox();
+        TextField firstNameField = buildNameTextField();
+        TextField lastnameField = buildLastnameTextField();
+        ComboBox<SeasonCard> seasonCardComboBox = buildSeasonCardComboBox();
         startDatePicker = buildStartDatePicker();
         endDatePicker = buildEndDatePicker();
 
         FormLayout formLayout = new FormLayout();
-        formLayout.add(firstNameField, startDatePicker, lastnameField,  endDatePicker,seasonCardComboBox);
+        formLayout.add(firstNameField, startDatePicker, lastnameField,  endDatePicker, seasonCardComboBox);
         formLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("", 2));
         formLayout.setWidth("500px");
