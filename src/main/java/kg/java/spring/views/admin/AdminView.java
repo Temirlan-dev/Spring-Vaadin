@@ -41,12 +41,11 @@ public class AdminView extends VerticalLayout {
     }
 
     private void setupComponentUI() {
-        nameTextField = buildTextField();
-        TextField surenameTextField = buildSurnameTextField();
+        nameTextField = buildSurnameTextField();
         customerGrid = buildCustomerGrid();
         Button saveButton = buildSaveButton();
 
-        HorizontalLayout horizontalLayout = new HorizontalLayout(nameTextField, surenameTextField, saveButton);
+        HorizontalLayout horizontalLayout = new HorizontalLayout(nameTextField, saveButton);
         Div div = new Div(horizontalLayout);
         horizontalLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
         div.setWidth("100%");
@@ -55,17 +54,13 @@ public class AdminView extends VerticalLayout {
     }
 
     private TextField buildSurnameTextField() {
-//        nameTextField = new TextField("Поиск по имени");
-        nameTextField.setPlaceholder("Поиск по имени");
-        nameTextField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
-        nameTextField.setClearButtonVisible(true);
-        nameTextField.setValueChangeMode(ValueChangeMode.LAZY);
-        nameTextField.addValueChangeListener(e -> refreshGridByName());
-        return nameTextField;
-    }
-
-    private TextField buildTextField() {
-        return new TextField("Фильтр");
+        TextField textField = new TextField();
+        textField.setPlaceholder("Поиск по имени");
+        textField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        textField.setClearButtonVisible(true);
+        textField.setValueChangeMode(ValueChangeMode.LAZY);
+        textField.addValueChangeListener(e -> refreshGridByName());
+        return textField;
     }
 
     private Button buildSaveButton() {
