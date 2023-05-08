@@ -38,4 +38,13 @@ public class CustomerServiceImpl implements CustomerService {
     public void delete(Customer customerId) {
         customerRepository.delete(customerId);
     }
+
+    @Override
+    public List<Customer> findAllCustomer(String filterByName) {
+        if (filterByName == null || filterByName.isEmpty()) {
+            return customerRepository.findAll();
+        } else {
+            return customerRepository.findByName(filterByName);
+        }
+    }
 }

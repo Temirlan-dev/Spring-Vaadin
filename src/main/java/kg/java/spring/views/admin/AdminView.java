@@ -5,7 +5,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -15,16 +14,13 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 import jakarta.annotation.security.RolesAllowed;
 import kg.java.spring.core.model.entity.Customer;
-import kg.java.spring.core.repository.CustomerRepository;
 import kg.java.spring.core.service.CustomerService;
 import kg.java.spring.core.service.SeasonCardService;
 import kg.java.spring.views.MainLayout;
 import kg.java.spring.views.admin.dialog.FormDialog;
 import lombok.extern.slf4j.Slf4j;
-
 import java.io.IOException;
 
 @Slf4j
@@ -34,17 +30,13 @@ import java.io.IOException;
 public class AdminView extends VerticalLayout {
     private final SeasonCardService seasonCardService;
     private final CustomerService customerService;
-    private final CustomerRepository customerRepository;
     private Grid<Customer> customerGrid;
-    private GridListDataView<Customer> gridListDataView;
     private TextField nameTextField;
 
     public AdminView(SeasonCardService seasonCardService,
-                     CustomerService customerService,
-                     CustomerRepository customerRepository) {
+                     CustomerService customerService) {
         this.seasonCardService = seasonCardService;
         this.customerService = customerService;
-        this.customerRepository = customerRepository;
         setupComponentUI();
     }
 
@@ -63,30 +55,13 @@ public class AdminView extends VerticalLayout {
     }
 
     private TextField buildSurnameTextField() {
-        TextField searchNameTextField = new TextField("Поиск по имени");
-        searchNameTextField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
-        searchNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
-        searchNameTextField.addValueChangeListener(e -> refreshGridByName());
-
-//        try {
-//            this.gridListDataView.addFilter(customer -> {
-//                var searchTerm = customerRepository.findByName(searchNameTextField.getValue().trim());
-//                if (searchTerm.isEmpty()) {
-//                    return true;
-//                } else {
-//                    return matchesTerm(customer.getName(),
-//                            searchTerm.toString());
-//                }
-//            });
-//            return searchNameTextField;
-//        } catch (Exception e) {
-//            e.equals("");
-//        }
-        return searchNameTextField;
-    }
-
-    private void refreshGridByName() {
-        customerGrid.setItems(customerRepository.findByName(nameTextField.getValue()));
+//        nameTextField = new TextField("Поиск по имени");
+        nameTextField.setPlaceholder("Поиск по имени");
+        nameTextField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        nameTextField.setClearButtonVisible(true);
+        nameTextField.setValueChangeMode(ValueChangeMode.LAZY);
+        nameTextField.addValueChangeListener(e -> refreshGridByName());
+        return nameTextField;
     }
 
     private TextField buildTextField() {
@@ -111,15 +86,15 @@ public class AdminView extends VerticalLayout {
         grid.addColumn(Customer::getStartDate).setHeader("Начало абоним");
         grid.addColumn(Customer::getEndDate).setHeader("Конец абоним");
         grid.addComponentColumn(item -> {
-                try {
-            return deleteFile(item);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }).setHeader("Удалить").setFlexGrow(0).setWidth("150px");
+            try {
+                return deleteFile(item);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).setHeader("Удалить").setFlexGrow(0).setWidth("150px");
 
         var customers = customerService.getCustomer();
-        this.gridListDataView = grid.setItems(customers);
+        grid.setItems(customers);
         return grid;
     }
 
@@ -155,6 +130,10 @@ public class AdminView extends VerticalLayout {
                 ButtonVariant.LUMO_TERTIARY);
         deleteButton.setIcon(new Icon(VaadinIcon.TRASH));
         return deleteButton;
+    }
+
+    private void refreshGridByName() {
+        customerGrid.setItems(customerService.findAllCustomer(nameTextField.getValue()));
     }
 
     private void refreshGrid() {

@@ -8,4 +8,5 @@ public interface CustomerService {
     ResponseDB save(Customer customer);
     List<Customer> getCustomer();
     void delete(Customer customerId);
+    List<Customer> findAllCustomer(String filterByName);
 }
