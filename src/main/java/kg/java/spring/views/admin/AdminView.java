@@ -5,40 +5,51 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import jakarta.annotation.security.RolesAllowed;
 import kg.java.spring.core.model.entity.Customer;
+import kg.java.spring.core.repository.CustomerRepository;
 import kg.java.spring.core.service.CustomerService;
 import kg.java.spring.core.service.SeasonCardService;
 import kg.java.spring.views.MainLayout;
 import kg.java.spring.views.admin.dialog.FormDialog;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 
-@PageTitle("Hello World")
-@Route(value = "hello", layout = MainLayout.class)
-@RouteAlias(value = "", layout = MainLayout.class)
-@RolesAllowed("ADMIN")
+@Slf4j
+@PageTitle("admin_view")
+@Route(value = "admin_view", layout = MainLayout.class)
+@RolesAllowed({"ADMIN"})
 public class AdminView extends VerticalLayout {
     private final SeasonCardService seasonCardService;
     private final CustomerService customerService;
+    private final CustomerRepository customerRepository;
     private Grid<Customer> customerGrid;
+    private GridListDataView<Customer> gridListDataView;
+    private TextField nameTextField;
 
-    public AdminView(SeasonCardService seasonCardService, CustomerService customerService) {
+    public AdminView(SeasonCardService seasonCardService,
+                     CustomerService customerService,
+                     CustomerRepository customerRepository) {
         this.seasonCardService = seasonCardService;
         this.customerService = customerService;
+        this.customerRepository = customerRepository;
         setupComponentUI();
     }
 
     private void setupComponentUI() {
-        TextField nameTextField = buildTextField();
+        nameTextField = buildTextField();
         TextField surenameTextField = buildSurnameTextField();
         customerGrid = buildCustomerGrid();
         Button saveButton = buildSaveButton();
@@ -52,7 +63,30 @@ public class AdminView extends VerticalLayout {
     }
 
     private TextField buildSurnameTextField() {
-        return new TextField("Фильтр");
+        TextField searchNameTextField = new TextField("Поиск по имени");
+        searchNameTextField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
+        searchNameTextField.addValueChangeListener(e -> refreshGridByName());
+
+//        try {
+//            this.gridListDataView.addFilter(customer -> {
+//                var searchTerm = customerRepository.findByName(searchNameTextField.getValue().trim());
+//                if (searchTerm.isEmpty()) {
+//                    return true;
+//                } else {
+//                    return matchesTerm(customer.getName(),
+//                            searchTerm.toString());
+//                }
+//            });
+//            return searchNameTextField;
+//        } catch (Exception e) {
+//            e.equals("");
+//        }
+        return searchNameTextField;
+    }
+
+    private void refreshGridByName() {
+        customerGrid.setItems(customerRepository.findByName(nameTextField.getValue()));
     }
 
     private TextField buildTextField() {
@@ -85,7 +119,7 @@ public class AdminView extends VerticalLayout {
     }).setHeader("Удалить").setFlexGrow(0).setWidth("150px");
 
         var customers = customerService.getCustomer();
-        grid.setItems(customers);
+        this.gridListDataView = grid.setItems(customers);
         return grid;
     }
 

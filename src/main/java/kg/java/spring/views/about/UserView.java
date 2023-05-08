@@ -10,12 +10,12 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import jakarta.annotation.security.RolesAllowed;
 import kg.java.spring.views.MainLayout;
 
-@PageTitle("About")
-@Route(value = "about", layout = MainLayout.class)
-@RolesAllowed("USER")
-public class AboutView extends VerticalLayout {
+@PageTitle("user_view")
+@Route(value = "user_view", layout = MainLayout.class)
+@RolesAllowed({"USER"})
+public class UserView extends VerticalLayout {
 
-    public AboutView() {
+    public UserView() {
         setSpacing(false);
 
         Image img = new Image("images/empty-plant.png", "placeholder plant");

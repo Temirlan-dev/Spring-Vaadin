@@ -33,7 +33,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 import java.util.Optional;
 import kg.java.spring.core.model.entity.User;
 import kg.java.spring.core.config.AuthenticatedUser;
-import kg.java.spring.views.about.AboutView;
+import kg.java.spring.views.about.UserView;
 import kg.java.spring.views.admin.AdminView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
@@ -130,7 +130,7 @@ public class MainLayout extends AppLayout {
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
                 new MenuItemInfo("Список клиентов", LineAwesomeIcon.GLOBE_SOLID.create(), AdminView.class), //
-                new MenuItemInfo("Ключи", LineAwesomeIcon.FILE.create(), AboutView.class), //
+                new MenuItemInfo("Ключи", LineAwesomeIcon.FILE.create(), UserView.class), //
 
         };
     }
